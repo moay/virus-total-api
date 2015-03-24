@@ -28,7 +28,7 @@ class VirusTotalApi {
         } catch (\Exception $e) {
             if ($e instanceof \VirusTotal\Exceptions\RateLimitException) 
             {
-                return ['success'=>false, 'error'=>'Too many requests'];
+                return ['success'=>false, 'error'=>'rate limit exceeded'];
             }
             else
             {
@@ -73,7 +73,7 @@ class VirusTotalApi {
         } catch (\Exception $e) {
             if ($e instanceof \VirusTotal\Exceptions\RateLimitException) 
             {
-                return ['success'=>false, 'error'=>'Too many requests'];
+                return ['success'=>false, 'error'=>'rate limit exceeded'];
             }
             else
             {
@@ -109,7 +109,7 @@ class VirusTotalApi {
             } catch (\Exception $e) {
                 if ($e instanceof \VirusTotal\Exceptions\RateLimitException) 
                 {
-                    return ['success'=>false, 'error'=>'Too many requests'];
+                    return ['success'=>false, 'error'=>'rate limit exceeded'];
                 }
                 else
                 {
