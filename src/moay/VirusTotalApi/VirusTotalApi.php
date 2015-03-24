@@ -1,6 +1,4 @@
 <?php namespace moay\VirusTotalApi;
-
-require_once(__DIR__.'/../../../vendor/autoload.php');
  
 class VirusTotalApi {
  	
