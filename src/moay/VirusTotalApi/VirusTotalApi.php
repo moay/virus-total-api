@@ -28,14 +28,14 @@ class VirusTotalApi {
         } catch (\Exception $e) {
             if ($e instanceof \VirusTotal\Exceptions\RateLimitException) 
             {
-                return ['success'=>'false', 'error'=>'Too many requests'];
+                return ['success'=>false, 'error'=>'Too many requests'];
             }
             else
             {
             throw new \Exception("Please setup a valid VirusTotal api key to use the api.", 1);
             }
         }
-        return $scanResults;
+        return array_merge(['success'=>true], $scanResults);
     }
 
     /**
@@ -73,13 +73,52 @@ class VirusTotalApi {
         } catch (\Exception $e) {
             if ($e instanceof \VirusTotal\Exceptions\RateLimitException) 
             {
-                return ['success'=>'false', 'error'=>'Too many requests'];
+                return ['success'=>false, 'error'=>'Too many requests'];
             }
             else
             {
                 throw new \Exception("Please setup a valid VirusTotal api key to use the api.", 1);
             }
         }
+        return array_merge(['success'=>true], $scanResults);
+    }
+
+    /**
+     * Scan a file via VirusTotal by providing its url
+     * @param  string  $url  The filename to scan, provided as publicly available url
+     * @param  boolean $rescan    Wether or not to force a rescan
+     * @return array              Thee information returned by VirusTotal.
+     */
+    public static function scanFileViaUrl($url){
+        $scanResults = self::scanUrl($url);
+        if($scanResults['success'] && isset($scanResults['filescan_id']))
+        {
+            // The api key must be set!
+            $apikey = config("virus-total-api.api_key");
+            if(!$apikey)
+            {
+                throw new \Exception("Please setup your VirusTotal api key to use the api.", 1);
+            }
+
+            // Prepare the file report
+            $filereport = new \VirusTotal\File($apikey);
+
+            // Try/Catch to get rate limit exceptions thrown by the api wrapper
+            try {
+                $fileReport = $filereport->getReport($scanResults['filescan_id']);
+            } catch (\Exception $e) {
+                if ($e instanceof \VirusTotal\Exceptions\RateLimitException) 
+                {
+                    return ['success'=>false, 'error'=>'Too many requests'];
+                }
+                else
+                {
+                    throw new \Exception("Please setup a valid VirusTotal api key to use the api.", 1);
+                }
+            }
+            return array_merge(['success'=>true], $fileReport);
+        }
+        
         return $scanResults;
     }
  

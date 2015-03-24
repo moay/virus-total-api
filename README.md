@@ -24,27 +24,58 @@ This will publish a file named `virus-total-api` to your `app/config` directory.
 Usage is super simple. Let's imagine a simple controller:
 
 	<?php namespace app\Http\Controllers;
-
+    
+    // Include the alias, else it won't work
 	use VirusTotal;
-
+    
 	class Simplecontroller extends Controller {
 	
-		/**
-		 * Let's scan google for malware
-		 */
-		public function scanGoogle()
+		public function example()
 		{
-			return VirusTotal::scanUrl('http://google.de');
-		}
-	
-		/**
-		 * Let's scan a file for malware
-		 */
-		public function scanFile()
-		{
-			return VirusTotal::scanFile('/my/absolute/filename.txt');
-		}
+			// Let's scan google for malware
+			$googleResults = VirusTotal::scanUrl('http://google.de');
 
+			// Let's scan a file for malware
+			$fileResults = VirusTotal::scanFile('/my/absolute/filename.txt');
+
+			//Let's scan a file for malware via its url
+			$remoteFileResults = VirusTotal::scanFileViaUrl('http://somecooldomain.com/filename.txt');
+		}
+    
 	}
 
 This is it, there are no more methods to learn. Please be aware of the access rate limits of the api. Read more about the returned stuff over at https://www.virustotal.com/documentation/public-api/
+
+The wrapper will add a `success` variable to the returned array to indicate whether or not the api request was successful. If you did exceed your api quota for the current minute or you did not provide a valid url, it will be set to false.
+
+### Using the results
+
+A quick example to handle the returned stuff.
+
+	<?php namespace app\Http\Controllers;
+    
+	use VirusTotal;
+    
+	class Simplecontroller extends Controller {
+	
+		public function anotherExample()
+		{
+			// Let's scan google for malware
+			$googleResults = VirusTotal::scanUrl('http://google.de');
+			
+			if($googleResults['success'])
+			{
+				// Let's check if there was a virus detected
+				if($googleResults['positives']>0)
+				{
+					// There was a virus - do something about it!
+				}
+			}
+			elseif($googleResults['error'=='rate limit exceeded'])
+			{
+				// Reschedule the scan
+				...
+			}
+		}
+    
+	}
