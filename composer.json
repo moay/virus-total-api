@@ -16,6 +16,5 @@
         "psr-0": {
             "moay\\VirusTotalApi\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
