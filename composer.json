@@ -1,12 +1,13 @@
 {
     "name": "moay/virus-total-api",
-    "description": "",
+    "description": "Very simple VirusTotal api wrapper for Laravel 5",
     "authors": [
         {
             "name": "moay",
             "email": "mv@moay.de"
         }
     ],
+    "license": "MIT",
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "5.x",
