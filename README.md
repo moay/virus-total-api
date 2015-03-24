@@ -4,10 +4,12 @@ Please be aware, that there are some limits to the public api. See their docs: h
 
 ## Installation
 Installation is super simple. Use Composer to require this package:
- 
+
+```json
     "require": {
         "moay/virus-total-api": "dev-master"
     }
+```
 
 After having pulled the repo via `composer update`, you will have to add this to your laravel providers in `app/config/app.php` (within the providers array):
 
@@ -23,26 +25,28 @@ This will publish a file named `virus-total-api` to your `app/config` directory.
 
 Usage is super simple. Let's imagine a simple controller:
 
-	<?php namespace app\Http\Controllers;
+```php
+<?php namespace app\Http\Controllers;
     
-    // Include the alias, else it won't work
-	use VirusTotal;
-    
-	class Simplecontroller extends Controller {
-	
-		public function example()
-		{
-			// Let's scan google for malware
-			$googleResults = VirusTotal::scanUrl('http://google.de');
+// Include the alias, else it won't work
+use VirusTotal;
 
-			// Let's scan a file for malware
-			$fileResults = VirusTotal::scanFile('/my/absolute/filename.txt');
+class Simplecontroller extends Controller {
 
-			//Let's scan a file for malware via its url
-			$remoteFileResults = VirusTotal::scanFileViaUrl('http://somecooldomain.com/filename.txt');
-		}
-    
+	public function example()
+	{
+		// Let's scan google for malware
+		$googleResults = VirusTotal::scanUrl('http://google.de');
+
+		// Let's scan a file for malware
+		$fileResults = VirusTotal::scanFile('/my/absolute/filename.txt');
+
+		//Let's scan a file for malware via its url
+		$remoteFileResults = VirusTotal::scanFileViaUrl('http://somecooldomain.com/filename.txt');
 	}
+
+}
+```
 
 This is it, there are no more methods to learn. Please be aware of the access rate limits of the api. Read more about the returned stuff over at https://www.virustotal.com/documentation/public-api/
 
@@ -52,30 +56,32 @@ The wrapper will add a `success` variable to the returned array to indicate whet
 
 A quick example to handle the returned stuff.
 
-	<?php namespace app\Http\Controllers;
-    
-	use VirusTotal;
-    
-	class Simplecontroller extends Controller {
-	
-		public function anotherExample()
+```php
+<?php namespace app\Http\Controllers;
+
+use VirusTotal;
+
+class Simplecontroller extends Controller {
+
+	public function anotherExample()
+	{
+		// Let's scan google for malware
+		$googleResults = VirusTotal::scanUrl('http://google.de');
+		
+		if($googleResults['success'])
 		{
-			// Let's scan google for malware
-			$googleResults = VirusTotal::scanUrl('http://google.de');
-			
-			if($googleResults['success'])
+			// Let's check if there was a virus detected
+			if($googleResults['positives']>0)
 			{
-				// Let's check if there was a virus detected
-				if($googleResults['positives']>0)
-				{
-					// There was a virus - do something about it!
-				}
-			}
-			elseif($googleResults['error'=='rate limit exceeded'])
-			{
-				// Reschedule the scan
-				...
+				// There was a virus - do something about it!
 			}
 		}
-    
+		elseif($googleResults['error'=='rate limit exceeded'])
+		{
+			// Reschedule the scan
+			...
+		}
 	}
+
+}
+```
