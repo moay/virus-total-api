@@ -1,0 +1,21 @@
+{
+    "name": "moay/virus-total-api",
+    "description": "",
+    "authors": [
+        {
+            "name": "moay",
+            "email": "mv@moay.de"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "5.x",
+        "jayzeng/virustotalapi": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "moay\\VirusTotalApi\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
